@@ -1,4 +1,6 @@
-import Cells.*;
+package MainGame;
+
+import MainGame.Cells.*;
 import java.util.*;
 
 public class GameField {
@@ -17,13 +19,13 @@ public class GameField {
 	}
 	public GameField(String mode) {
 		switch (mode) {
-			case "Easy", "easy", "e":
+			case "Easy", "easy", "e", "E":
 				easyMode();
 				break;
-			case "Normal", "normal", "n":
+			case "Normal", "normal", "n", "N":
 				normalMode();
 				break;
-			case "Hard", "hard", "h":
+			case "Hard", "hard", "h", "H":
 				hardMode();
 				break;
 			default:
@@ -78,20 +80,20 @@ public class GameField {
 
 	private TreeMap<String, Cell> createGameField() {
 		TreeMap<String, Cell> field = new TreeMap<>();
-		Random rand = new Random(1);
-		//Создаем пустое поле
+		Random rand = new Random();
+		//Create empty game field
 		for (int i = 0; i < fieldSize; i++) {
 			for (int j = 0; j < fieldSize; j++) {
 				field.put(COORDINATES[i][j], null);
 			}
 		}
-		//Заполняем бомбами
+		//Feeling with bombs
 		for (int i = 0; i < amountOfBombs; i++) {
 			int rowCoordinateIndex = rand.nextInt(fieldSize);
 			int columnCoordinateIndex = rand.nextInt(fieldSize);
 			field.put(COORDINATES[rowCoordinateIndex][columnCoordinateIndex], new BombCell());
 		}
-		//Заполняем остальное
+		//Feeling with other
 		for (String currentCoordinates : field.keySet()) {
 			if (field.get(currentCoordinates) != null) {
 				continue;
@@ -118,24 +120,22 @@ public class GameField {
 	private ArrayList<String> getNearByCells(String currentCoordinates, Set<String> allCoordinates) {
 		ArrayList<String> nearByCells = new ArrayList<>();
 		char[] currentCoordinatesSymbols = currentCoordinates.toCharArray();
-		char currentCoordinatesLetter = currentCoordinatesSymbols[0]; //Получение буквы текущей координаты
-		int currentCoordinatesDigit = Character.getNumericValue(currentCoordinatesSymbols[1]); //Получение цифры текущей координаты
+		char currentCoordinatesLetter = currentCoordinatesSymbols[0]; //Getting letter of current coordination
+		int currentCoordinatesDigit = Character.getNumericValue(currentCoordinatesSymbols[1]); //Getting digit of current coordination
 
 		for (String coordinatesElement : allCoordinates) {
 			if (currentCoordinates.equals(coordinatesElement)) {
 				continue;
 			}
-			//Парсинг
 			char[] coordinatesSymbols = coordinatesElement.toCharArray();
-			char coordinateLetter = coordinatesSymbols[0]; //Получение буквы координаты для сравнения
-			int coordinateDigit = Character.getNumericValue(coordinatesSymbols[1]); //Получение цифры координаты для сравнения
+			char coordinateLetter = coordinatesSymbols[0]; //Getting letter of coordination for compare
+			int coordinateDigit = Character.getNumericValue(coordinatesSymbols[1]); //Getting digit of coordination for compare
 
 			char plusCoordinateLetter = (char) (coordinateLetter + 1);
 			char minusCoordinateLetter = (char) (coordinateLetter - 1);
 			int plusCoordinateDigit = coordinateDigit + 1;
 			int minusCoordinateDigit = coordinateDigit - 1;
 
-			//Сравнение
 			if (coordinateLetter == currentCoordinatesLetter || plusCoordinateLetter == currentCoordinatesLetter || minusCoordinateLetter == currentCoordinatesLetter) {
 				if (coordinateDigit == currentCoordinatesDigit || plusCoordinateDigit == currentCoordinatesDigit || minusCoordinateDigit == currentCoordinatesDigit) {
 					nearByCells.add(coordinatesElement);
@@ -161,9 +161,18 @@ public class GameField {
 			System.out.print(" " + "\n");
 		}
 	}
+	public void flagCell(String coordination) {
+		GAME_FIELD.get(coordination).flagCell();
+	}
 	public void openCell(String coordination) {
 		GAME_FIELD.get(coordination).openCell();
 		this.numberOfOpenedCells++;
+	}
+	public void openAllCells() {
+		for (String coordination : GAME_FIELD.keySet()) {
+			GAME_FIELD.get(coordination).openCell();
+		}
+		updateGameField();
 	}
 	public boolean cellHasBomb(String coordination) {
 		return GAME_FIELD.get(coordination).hasBomb();
@@ -182,6 +191,4 @@ public class GameField {
 	public int getFieldSize() {
 		return fieldSize;
 	}
-
-
 }

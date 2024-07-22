@@ -1,6 +1,8 @@
+import MainGame.MineSweeper;
+
 public class Play {
-	public static void main(String[] args) throws InterruptedException {
-		MineSweeper s = new MineSweeper();
-		s.playGame();
+	public static void main(String[] args) {
+		MineSweeper game = new MineSweeper();
+		game.playGame();
 	}
 }
