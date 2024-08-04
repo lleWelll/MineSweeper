@@ -1,5 +1,6 @@
 package MainGame.Cells;
 import Constants.*;
+import Exceptions.InvalidAmountOfBombsException;
 
 public class NormalCell extends Cell {
 	protected final String OPENED_CELL;
@@ -11,29 +12,21 @@ public class NormalCell extends Cell {
 	public NormalCell() {
 		this.OPENED_CELL = "";
 	}
+
 	private String cellText(int bombsAround){
-		switch (bombsAround) {
-			case 0:
-				return Constants.NORMAL_CELL_0.getText();
-			case 1:
-				return Constants.NORMAL_CELL_1.getText();
-			case 2:
-				return Constants.NORMAL_CELL_2.getText();
-			case 3:
-				return Constants.NORMAL_CELL_3.getText();
-			case 4:
-				return Constants.NORMAL_CELL_4.getText();
-			case 5:
-				return Constants.NORMAL_CELL_5.getText();
-			case 6:
-				return Constants.NORMAL_CELL_6.getText();
-			case 7:
-				return Constants.NORMAL_CELL_7.getText();
-			case 8:
-				return Constants.NORMAL_CELL_8.getText();
-		}
-		return "!";
-	}
+		return switch (bombsAround) {
+			case 0 -> Constants.NORMAL_CELL_0.getText();
+			case 1 -> Constants.NORMAL_CELL_1.getText();
+			case 2 -> Constants.NORMAL_CELL_2.getText();
+			case 3 -> Constants.NORMAL_CELL_3.getText();
+			case 4 -> Constants.NORMAL_CELL_4.getText();
+			case 5 -> Constants.NORMAL_CELL_5.getText();
+			case 6 -> Constants.NORMAL_CELL_6.getText();
+			case 7 -> Constants.NORMAL_CELL_7.getText();
+			case 8 -> Constants.NORMAL_CELL_8.getText();
+			default -> throw new InvalidAmountOfBombsException("Invalid amount of Bombs around cell");
+		};
+    }
 
 	@Override
 	public void printCell() {

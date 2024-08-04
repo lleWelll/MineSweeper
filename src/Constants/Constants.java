@@ -1,11 +1,12 @@
 package Constants;
 
 public enum Constants {
-	WELCOME_TEXT("Hello, you are playing 'MainGame.MineSweeper'\n" + "Enter preferred mode (easy, normal, hard)"),
+	WELCOME_TEXT("Hello, you are playing 'MainGame.MineSweeper'\n" + "Enter preferred mode (Easy, Normal, Hard, Custom)"),
 	VICTORY_TEXT(Colors.YELLOW.getColor() + "\nYOU WIN!!" + Colors.RESET.getColor()),
 	LOSS_TEXT(Colors.RED.getColor() + "\nYOU LOST(" + Colors.RESET.getColor()),
 	COORDINATION_CHOICE("Enter cell to open (A1, B4, E2)"),
 	INCORRECT_COORDINATION_TEXT("Entered wrong coordination, try again"),
+	ENTER_SIZE_OF_FIELD_AND_AMOUNT_OF_BOMBS("Enter size of field (2 <= x <= 9) and amount of bombs (x < size^2)"),
 	DIVISION_LINE("----------------------"),
 	CLOSED_CELL("▢"),
 	FLAGGED_CLOSED_CELL(Colors.RED.getColor() + "▢" + Colors.RESET.getColor()),

@@ -23,12 +23,19 @@ public class Validator {
 			return false;
 		}
 
-
 		if (coordinateLetter >= 'A' && coordinateLetter <= (char) ('A' + fieldSize - 1)) {
 			if (coordinateDigit >= 1 && coordinateDigit <= fieldSize) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public static boolean isCorrectSizeOfField(int size) {
+		return size >= 2 && size <= 9;
+	}
+
+	public static boolean isCorrectAmountsOfBombs(int amountOfBombs, int size) {
+		return amountOfBombs < size * size && amountOfBombs > 0;
 	}
 }

@@ -1,5 +1,7 @@
 package MainGame;
 
+import Constants.Constants;
+import Exceptions.*;
 import MainGame.Cells.*;
 import java.util.*;
 
@@ -18,18 +20,13 @@ public class GameField {
 		this.GAME_FIELD = createGameField();
 	}
 	public GameField(String mode) {
+		mode = mode.toLowerCase();
 		switch (mode) {
-			case "Easy", "easy", "e", "E":
-				easyMode();
-				break;
-			case "Normal", "normal", "n", "N":
-				normalMode();
-				break;
-			case "Hard", "hard", "h", "H":
-				hardMode();
-				break;
-			default:
-				throw new RuntimeException("Invalid mode");
+			case "easy", "e" -> easyMode();
+			case "normal", "n" -> normalMode();
+			case "hard", "h" -> hardMode();
+			case "custom", "c" -> customMode();
+			default -> throw new InvalidModeException();
 		}
 		this.COORDINATES = createCoordinates();
 		this.COORDINATE_GRID = createCoordinateGrid();
@@ -46,6 +43,16 @@ public class GameField {
 	private void hardMode(){
 		fieldSize = 9;
 		amountOfBombs = 27;
+	}
+	private void customMode() {
+		Scanner scan = new Scanner(System.in);
+		Constants.ENTER_SIZE_OF_FIELD_AND_AMOUNT_OF_BOMBS.print();
+		int size = scan.nextInt();
+		int bombs = scan.nextInt();
+		if (Validator.isCorrectSizeOfField(size)) fieldSize = size;
+		else throw new InvalidSizeException();
+		if (Validator.isCorrectAmountsOfBombs(bombs, fieldSize)) amountOfBombs = bombs;
+		else throw new InvalidAmountOfBombsException();
 	}
 
 	private String[][] createCoordinates() {
@@ -88,10 +95,14 @@ public class GameField {
 			}
 		}
 		//Feeling with bombs
-		for (int i = 0; i < amountOfBombs; i++) {
+		for (int createdBombs = 0; createdBombs < amountOfBombs;) {
 			int rowCoordinateIndex = rand.nextInt(fieldSize);
 			int columnCoordinateIndex = rand.nextInt(fieldSize);
-			field.put(COORDINATES[rowCoordinateIndex][columnCoordinateIndex], new BombCell());
+			String Coordinate = COORDINATES[rowCoordinateIndex][columnCoordinateIndex];
+			if (field.get(Coordinate) == null) {
+				field.put(Coordinate, new BombCell());
+				createdBombs++;
+			}
 		}
 		//Feeling with other
 		for (String currentCoordinates : field.keySet()) {
@@ -111,7 +122,7 @@ public class GameField {
 				if (field.get(cell).hasBomb()) {
 					bombsCounter++;
 				}
-			} catch (NullPointerException e) {
+			} catch (NullPointerException ignored) {
 			}
 		}
 		return bombsCounter;
@@ -136,8 +147,12 @@ public class GameField {
 			int plusCoordinateDigit = coordinateDigit + 1;
 			int minusCoordinateDigit = coordinateDigit - 1;
 
-			if (coordinateLetter == currentCoordinatesLetter || plusCoordinateLetter == currentCoordinatesLetter || minusCoordinateLetter == currentCoordinatesLetter) {
-				if (coordinateDigit == currentCoordinatesDigit || plusCoordinateDigit == currentCoordinatesDigit || minusCoordinateDigit == currentCoordinatesDigit) {
+			if (coordinateLetter == currentCoordinatesLetter
+					|| plusCoordinateLetter == currentCoordinatesLetter
+					|| minusCoordinateLetter == currentCoordinatesLetter) {
+				if (coordinateDigit == currentCoordinatesDigit
+						|| plusCoordinateDigit == currentCoordinatesDigit
+						|| minusCoordinateDigit == currentCoordinatesDigit) {
 					nearByCells.add(coordinatesElement);
 				}
 			}
